@@ -1,183 +1,89 @@
-# Project 2 - Ames Housing Data and Kaggle Challenge
-
-Welcome to Project 2! It's time to start modeling.
-
-**Primary Learning Objectives:**
-1. Creating and iteratively refining a regression model
-2. Using [Kaggle](https://www.kaggle.com/) to practice the modeling process
-3. Providing business insights through reporting and presentation.
-
-You are tasked with creating a regression model based on the Ames Housing Dataset. This model will predict the price of a house at sale.
-
-The Ames Housing Dataset is an exceptionally detailed and robust dataset with over 70 columns of different features relating to houses.
-
-Secondly, we are hosting a competition on Kaggle to give you the opportunity to practice the following skills:
-
-- Refining models over time
-- Use of train-test split, cross-validation, and data with unknown values for the target to simulate the modeling process
-- The use of Kaggle as a place to practice data science
-
-As always, you will be submitting a technical report and a presentation. **You may find that the best model for Kaggle is not the best model to address your data science problem.**
-
-## Set-up
-
-Before you begin working on this project, please do the following:
-
-1. Sign up for an account on [Kaggle](https://www.kaggle.com/)
-2. **IMPORTANT**: Click this link ([Regression Challenge Sign Up](https://www.kaggle.com/t/2dde5663e03b4165b853ff65e723c26d)) to **join** the competition (otherwise you will not be able to make submissions!)
-3. Review the material on the [DSI-US-11 Regression Challenge](https://www.kaggle.com/c/dsi-us-11-project-2-regression-challenge)
-4. Review the [data description](http://jse.amstat.org/v19n3/decock/DataDocumentation.txt).
-
-## The Modeling Process
-
-1. The train dataset has all of the columns that you will need to generate and refine your models. The test dataset has all of those columns except for the target that you are trying to predict in your Regression model.
-2. Generate your regression model using the training data. We expect that within this process, you'll be making use of:
-    - train-test split
-    - cross-validation / grid searching for hyperparameters
-    - strong exploratory data analysis to question correlation and relationship across predictive variables
-    - code that reproducibly and consistently applies feature transformation (such as the preprocessing library)
-3. Predict the values for your target column in the test dataset and submit your predictions to Kaggle to see how your model does against unknown data.
-    - **Note**: Kaggle expects to see your submissions in a specific format. Check the challenge's page to make sure you are formatting your CSVs correctly!
-    - **You are limited to models you've learned in class**. In other words, you cannot use XGBoost, Neural Networks or any other advanced model for this project.
-4. Evaluate your models!
-    - consider your evaluation metrics
-    - consider your baseline score
-    - how can your model be used for inference?
-    - why do you believe your model will generalize to new data?
-
-## Submission
-
-Materials must be submitted by the beginning of class on **Friday, April 10**.
-
-The last day for the Kaggle competition will be **Friday, April 10**.
-
-Your technical report will be hosted on Github Enterprise. Make sure it includes:
-
-- A README.md (that isn't this file)
-- Jupyter notebook(s) with your analysis and models (renamed to describe your project)
-- At least one successful prediction submission on [DSI-US-11 Regression Challenge](https://www.kaggle.com/c/dsi-us-11-project-2-regression-challenge) --  you should see your name in the "[Leaderboard](https://www.kaggle.com/c/dsi-us-11-project-2-regression-challenge/leaderboard)" tab.
-- Data files
-- Presentation slides
-- Any other necessary files (images, etc.)
-
-**Check with your local instructor for how they would like you to submit your repo for review.**
-
+# Predicting Ames, IA House Prices  
+## Building the best predictive model for the portfolio feature of our App
 ---
-
-## Presentation Structure
-
-- **Must be within time limit established by local instructor.**
-- Use Google Slides or some other visual aid (Keynote, Powerpoint, etc).
-- Consider the audience. **Check with your local instructor for direction**.
-- Start with the **data science problem**.
-- Use visuals that are appropriately scaled and interpretable.
-- Talk about your procedure/methodology (high level).
-- Talk about your primary findings.
-- Make sure you provide **clear recommendations** that follow logically from your analyses and narrative and answer your data science problem.
-
-Be sure to rehearse and time your presentation before class.
-
+#### Julia Kelman: [GitHub](https://github.com/JulKelman)  
+  
+  
+## Problem Statement
 ---
+We are a property management company providing services through an App for individuals who own multiple real estate properties. Our services include management, repairs, rent collection AND a portfolio feature that allows our clients to track the value of their properties.  
+We are looking to expand to a new market and our sales team discovered that real estate, rental, and leasing is the number 4 industry contributing to the Iowa Gross Domestic Product ([source](https://www.iowadatacenter.org/quickfacts)). Since Ames, IA is the home of Iowa State University ([source](https://en.wikipedia.org/wiki/Ames,_Iowa)) and largely populated by students, we expect a large number of rental properties in this city which makes it the perfect place to roll out our App.  
 
-## Rubric
-Your local instructor will evaluate your project (for the most part) using the following criteria.  You should make sure that you consider and/or follow most if not all of the considerations/recommendations outlined below **while** working through your project.
+We need to predict house prices with the highest level of accuracy for the portfolio feature of our App.  
+We plan to solve this problem by using the Ames Housing Dataset to build a regression model able to predict house prices with the highest R^2 and lowest RMSE.   
+This model will inform which features our employees should record data on during their monthly inspections. 
 
-**Scores will be out of 27 points based on the 9 items in the rubric.** <br>
-*3 points per section*<br>
+## Executive Summary 
+---
+Our goal is to build a model able to predict Ames, IA house prices with the highest predictive power for the portfolio feature of our App. In order to do so, the [Ames Housing Dataset](https://git.generalassemb.ly/julia-kelman/project_2/blob/master/datasets/train.csv) was used. This dataframe contains information provided by the Ames Iowa Assessor's Office and contains assessments of individual residential properties sold in Ames, IA from 2006 to 2010. To compile this dataset 2930 properties were assessed and 81 variables were provided for each of those homes. For a detailed list and description of those variables refer to the original [data dictionary](http://jse.amstat.org/v19n3/decock/DataDocumentation.txt).  
+A small portion of this dataset was reserved for a Kaggle competition and included in a [validation set](https://git.generalassemb.ly/julia-kelman/project_2/blob/master/datasets/test.csv). As a result our work was done on a subset of 2051 of those observations.  
+The dataframe was cleaned, making sure to reformat any variables with data points wrongly assigned a null value. Non-numeric ordinal variables were reformated as well in order to be tranformed into numerical features. Dummy variables were created from the remaining non-numeric features in order to be included in our model. Finally, 2 new features were engineered.  
+Exploratory analysis including summary statistics was performed to identify trends in the data. Data visualization tools were then used to visualize those trends and identify specific features that may be highly correlated to our target variable of sale price. Four models were tested: a baseline model, a linear regression model, a ridge model and a lasso model. The models were compared using R-squared and RMSE and the Lasso model was selected as the best preditive model. Further evaluation of the lasso model's performance and errors was performed.  
+We concluded that a Lasso Regression model with most features included (75 variables: 73 of the 81 originals and 2 engineered) gives us the highest predictive power. We recommended that data be collected on all of those features during our montly home inspections. Additional specific recommendations concerning which feature to focus on during those assessments and the need for procedures during data collection were made. 
 
-| Score | Interpretation |
-| --- | --- |
-| **0** | *Project fails to meet the minimum requirements for this item.* |
-| **1** | *Project meets the minimum requirements for this item, but falls significantly short of portfolio-ready expectations.* |
-| **2** | *Project exceeds the minimum requirements for this item, but falls short of portfolio-ready expectations.* |
-| **3** | *Project meets or exceeds portfolio-ready expectations; demonstrates a thorough understanding of every outlined consideration.* |
 
-### The Data Science Process
+## Tale of Contents:
+---
+- [Ames Housing Data Import](#Loading-Data) 
+- [Data Cleaning](#Data-Cleaning) 
+- [Exploratory Data Analysis](#EDA) 
+- [Model Preparation](#Model-Preparation)
+- [Modeling](#Modeling)  
+    - [Baseline Model](#Baseline-Model)  
+    - [Linear Regression](#Linear-Regression)  
+    - [Ridge](#Ridge)  
+    - [Lasso](#Lasso)  
+- [Model Selection](#Model-Selection)
+    - [Predictions](#Calculating-Predictions)
+    - [RMSE](#Calculating-RMSE)
+    - [R-Squared](#Calculating-R^2)
+    - [Model Comparaison](#Model-Comparaison)
+- [Model Evaluation](#Model-Evaluation)
+- [Conclusion & Recommendations](#Conclusion-and-Recommendations)
+- [References](#References)
+- [Kaggle Submission](#Kaggle-Submission)
 
-**Problem Statement**
-- Is it clear what the student plans to do?
-- What type of model will be developed?
-- How will success be evaluated?
-- Is the scope of the project appropriate?
-- Is it clear who cares about this or why this is important to investigate?
-- Does the student consider the audience and the primary and secondary stakeholders?
+## Project Files 
+---
+ [Ames Housing Training Dataset](https://git.generalassemb.ly/julia-kelman/project_2/blob/master/datasets/train.csv)   
+[Validation Hold-Out Dataset](https://git.generalassemb.ly/julia-kelman/project_2/blob/master/datasets/test.csv)
+[Cleaned Dataset](https://git.generalassemb.ly/julia-kelman/project_2/blob/master/datasets/cleaned_dataframe.csv)
+## Data Dictionary 
+---
+[Data Dictionary Link](http://jse.amstat.org/v19n3/decock/DataDocumentation.txt)
 
-**Data Cleaning and EDA**
-- Are missing values imputed appropriately?
-- Are distributions examined and described?
-- Are outliers identified and addressed?
-- Are appropriate summary statistics provided?
-- Are steps taken during data cleaning and EDA framed appropriately?
-- Does the student address whether or not they are likely to be able to answer their problem statement with the provided data given what they've discovered during EDA?
+## Main Findings
+---
+The 10 numerical features with the highest correlation with Sale Price are:
+    1. Overall Quality
+    2. External Quality
+    3. Above ground living area Sq Ft(Gr Liv Area)
+    4. Kitchen Quality
+    5. Garage Area
+    6. Garage Cars
+    7. Total Basement Sq Ft
+    8. 1st Floor Sq Ft
+    9. Basement Quality
+    10. True Total Rooms Above Ground (True TotRms AbvGrd)
 
-**Preprocessing and Modeling**
-- Are categorical variables one-hot encoded?
-- Does the student investigate or manufacture features with linear relationships to the target?
-- Have the data been scaled appropriately?
-- Does the student properly split and/or sample the data for validation/training purposes?
-- Does the student utilize feature selection to remove noisy or multi-collinear features?
-- Does the student test and evaluate a variety of models to identify a production algorithm (**AT MINIMUM:** linear regression, lasso, and ridge)?
-- Does the student defend their choice of production model relevant to the data at hand and the problem?
-- Does the student explain how the model works and evaluate its performance successes/downfalls?
+The five features with the highest lasso model coefficients are:
+    1. Above Ground Living Area
+    2. Overall Quality
+    3. Year Built
+    4. Overall COndition
+    5. Finished Basement 1 Sq Ft
 
-**Evaluation and Conceptual Understanding**
-- Does the student accurately identify and explain the baseline score?
-- Does the student select and use metrics relevant to the problem objective?
-- Is more than one metric utilized in order to better assess performance?
-- Does the student interpret the results of their model for purposes of inference?
-- Is domain knowledge demonstrated when interpreting results?
-- Does the student provide appropriate interpretation with regards to descriptive and inferential statistics?
+## Conclusions and Recommendations 
+--- 
+A Lasso Regression model with most features included (75 variables: 73 of the 81 originals and 2 engineered) gives us the highest predictive power.
 
-**Conclusion and Recommendations**
-- Does the student provide appropriate context to connect individual steps back to the overall project?
-- Is it clear how the final recommendations were reached?
-- Are the conclusions/recommendations clearly stated?
-- Does the conclusion answer the original problem statement?
-- Does the student address how findings of this research can be applied for the benefit of stakeholders?
-- Are future steps to move the project forward identified?
+We recommend that data be collected on all of those features in order to have the highest predictive power. We recognize that collecting data on 75 variables may seem tedious. However, only 17 features are subject to change after initial assessment. We recommend to confirm with the operations team if they belive a lengthy initial assessment followed by shorter monthly assessments of those 17 features is reasonable.
+In addition, we recommend to create a procedure for employees to collect data on those variables during the monthly assessments. Indeed, many of those features are qualitative in nature and all employees must assess them using the same approach in order for the values to be valid.
+Finally, special attention should be given to the features with high correlation and high model coeficients identified above during those assessments. 
 
-### Organization and Professionalism
+## References
+--- 
+[Iowa Quick Facts](https://www.iowadatacenter.org/quickfacts)  
+[Ames, IA Wikipedia](https://en.wikipedia.org/wiki/Ames,_Iowa)  
+[Data Dictionary](http://jse.amstat.org/v19n3/decock/DataDocumentation.txt)
 
-**Project Organization**
-- Are modules imported correctly (using appropriate aliases)?
-- Are data imported/saved using relative paths?
-- Does the README provide a good executive summary of the project?
-- Is markdown formatting used appropriately to structure notebooks?
-- Are there an appropriate amount of comments to support the code?
-- Are files & directories organized correctly?
-- Are there unnecessary files included?
-- Do files and directories have well-structured, appropriate, consistent names?
-
-**Visualizations**
-- Are sufficient visualizations provided?
-- Do plots accurately demonstrate valid relationships?
-- Are plots labeled properly?
-- Are plots interpreted appropriately?
-- Are plots formatted and scaled appropriately for inclusion in a notebook-based technical report?
-
-**Python Syntax and Control Flow**
-- Is care taken to write human readable code?
-- Is the code syntactically correct (no runtime errors)?
-- Does the code generate desired results (logically correct)?
-- Does the code follows general best practices and style guidelines?
-- Are Pandas functions used appropriately?
-- Are `sklearn` methods used appropriately?
-
-**Presentation**
-- Is the problem statement clearly presented?
-- Does a strong narrative run through the presentation building toward a final conclusion?
-- Are the conclusions/recommendations clearly stated?
-- Is the level of technicality appropriate for the intended audience?
-- Is the student substantially over or under time?
-- Does the student appropriately pace their presentation?
-- Does the student deliver their message with clarity and volume?
-- Are appropriate visualizations generated for the intended audience?
-- Are visualizations necessary and useful for supporting conclusions/explaining findings?
-
-In order to pass the project, students must earn a minimum score of 1 for each category.
-- Earning below a 1 in one or more of the above categories would result in a failing project.
-- While a minimum of 1 in each category is the required threshold for graduation, students should aim to earn at least an average of 1.5 across each category. An average score below 1.5, while it may be passing, means students may want to solicit specific feedback in order to significantly improve the project before showcasing it as part of a portfolio or the job search.
-
-### REMEMBER:
-
-This is a learning environment and you are encouraged to try new things, even if they don't work out as well as you planned! While this rubric outlines what we look for in a _good_ project, it is up to you to go above and beyond to create a _great_ project. **Learn from your failures and you'll be prepared to succeed in the workforce**.
