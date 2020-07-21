@@ -1,0 +1,8 @@
+.ipynb_checkpoints/
+.DS_Store/
+code/.*
+assets
+suggestions.md
+project_2_features
+suggestions
+
